@@ -1,0 +1,161 @@
+// On Input Filed Lable/PalceHolder Floating Problem
+
+@import '~@angular/material/theming';
+
+@function app-font($config, $name) {
+  @return map-get($config, $name);
+}
+
+@mixin app-font-to-style($config) {
+  $font-size: map-get($config, font-size);
+  $font-weight: map-get($config, font-weight);
+  $line-height: map-get($config, line-height);
+  $font-family: map-get($config, font-family);
+
+  @include mat-typography-font-shorthand($font-size, $font-weight, $line-height, $font-family);
+  letter-spacing: map-get($config, letter-spacing);
+}
+$font-family: Roboto, 'Helvetica Neue', sans-serif;
+$app-page-header: mat-typography-level(24px, 32px, 700, $font-family);
+$app-title: mat-typography-level(22px, 32px, 700, $font-family);
+$app-subtitle: mat-typography-level(16px, 28px, 700, $font-family);
+$app-body: mat-typography-level(14px, 20px, 400, $font-family);
+$app-nav-menu: mat-typography-level(13px, 20px, 500, $font-family, 0.25px);
+$app-sub-nav-menu: mat-typography-level(13px, 20px, 400, $font-family);
+$app-input: mat-typography-level(14px, 1.125, 400, $font-family);
+
+
+@mixin app-text-field-theme($theme) {
+  $field-spacing: 10px;
+  $app-field-value-font-size: app-font($app-input, font-size);
+
+  .app-field {
+    width: inherit;
+    font-size: $app-field-value-font-size + 2px;
+
+    .mat-form-field-flex {
+      border-radius: 4px 4px 0 0;
+      padding-right: $field-spacing;
+
+      .mat-form-field-label {
+        top: 14.8px;
+        font-size: $app-field-value-font-size;
+        padding-left: $field-spacing;
+      }
+      input {
+        @include app-font-to-style($app-input);
+        padding-left: $field-spacing;
+      }
+      .mat-select {
+        @include app-font-to-style($app-input);
+        .mat-select-value {
+          padding-left: $field-spacing;
+        }
+      }
+    }
+    .mat-form-field-subscript-wrapper {
+      margin-top: 3.5px;
+      .mat-error {
+        @include set-field-padding($field-spacing);
+      }
+    }
+
+// Lable Floating Code Starts
+
+    &.mat-form-field-should-float {
+      .mat-form-field-autofill-control:-webkit-autofill + .mat-form-field-label-wrapper .mat-form-field-label {
+        @include set-transform-details(-10px, 0.85, 100px, 0.001px);
+      }
+      .mat-form-field-label-wrapper .mat-form-field-label {
+        @include set-transform-details(-10px, 0.85, 100px, 0.001px);
+      }
+    }
+// Lable Floating Code Ends
+
+    &:not(.mat-form-field-disabled) {
+      @include set-underline-color(mat-color($app-gray-scale, darker));
+      @include set-label-color(mat-color($app-gray-scale, darker) !important);
+
+      .mat-input-element,
+      .mat-select-value-text {
+        color: mat-color($app-gray-scale, darker);
+      }
+
+      &.mat-focused,
+      &.mat-focused:hover {
+        @include set-background-color(mat-color($app-gray-scale, 300));
+        @include set-label-color(mat-color($primary) !important);
+      }
+
+      &:hover {
+        @include set-label-color(mat-color($primary) !important);
+        @include set-underline-color(mat-color($app-gray-scale, 900));
+        @include set-background-color(mat-color($app-gray-scale, 100));
+
+        &:not(.mat-form-field-invalid) .mat-form-field-ripple {
+          transform: scaleX(1);
+          opacity: 1;
+        }
+      }
+
+      &.danger {
+        @include set-suffix-icon-color(mat-color($danger));
+      }
+
+      &.warning.mat-form-field-invalid {
+        @include set-suffix-icon-color(mat-color($app-warning));
+        @include set-underline-ripple-color(mat-color($app-warning));
+        @include set-message-color(mat-color($app-warning));
+      }
+    }
+
+    &.mat-form-field-disabled {
+      .mat-form-field-underline {
+        background-image: none;
+      }
+    }
+  }
+}
+
+@mixin set-field-padding($space) {
+  padding-left: $space;
+  padding-right: $space;
+}
+
+@mixin set-background-color($color) {
+  .mat-form-field-flex {
+    background-color: $color;
+    .mat-input-element {
+      box-shadow: 0 0 0 30px $color inset !important;
+    }
+  }
+}
+@mixin set-underline-color($color) {
+  .mat-form-field-underline {
+    background-color: $color;
+  }
+}
+@mixin set-underline-ripple-color($color) {
+  .mat-form-field-underline .mat-form-field-ripple {
+    background-color: $color;
+  }
+}
+@mixin set-message-color($color) {
+  .mat-form-field-subscript-wrapper .mat-error {
+    color: $color;
+  }
+}
+@mixin set-label-color($color) {
+  .mat-form-field-label {
+    color: $color;
+  }
+}
+@mixin set-suffix-icon-color($color) {
+  .mat-form-field-suffix .mat-icon {
+    color: $color;
+  }
+}
+@mixin set-transform-details($translatey, $scale, $perspective, $translatez) {
+  transform: translateY($translatey) scale($scale) perspective($perspective) translateZ($translatez);
+  -webkit-transform: translateY($translatey) scale($scale) perspective($perspective) translateZ($translatez);
+}
